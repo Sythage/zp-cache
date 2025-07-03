@@ -34,7 +34,7 @@ private:
     NodePtr tail_;  // 假尾节点
 
 public:
-    explicit FreqList(int n)
+    explicit FreqList(int n) //explicit 意为明确的，
     : freq_(n)
     {
         head_ = std::make_shared<Node>();
@@ -53,7 +53,8 @@ public:
     
         node->pre = tail_->pre;
         node->next = tail_;
-        tail_->pre.lock()->next = node; // 使用lock()获取shaderd_ptr
+        tail_->pre.lock()->next = node; // 使用lock()获取shaderd_ptr，因为weak_ptr 不能直接访问对象需要用lock升级为shared_ptr
+                                        // 如果对象存在返回有效的shared_ptr ，如果不存在 返回空的shared_ptr
         tail_->pre = node;
     }
 
