@@ -31,7 +31,11 @@ public:
     size_t getAccessCount() const { return accessCount_; }
 
     // Setters
-    
-}
+    void setValue(const Value& value) { value_ = value; }
+    void incrementAccessCount() {++accessCount_; }
+
+    template<typename K, typename  V> friend class ArcLruPart;
+    template<typename  K, typename  V> friend class ArcLfuPart;
+};
 
 } // namespace ZPCache
