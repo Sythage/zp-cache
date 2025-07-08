@@ -12,7 +12,7 @@ set(CXX_STANDARD_REQUIRED ON) #Make C++23 a hard requirement
 set(CMAKE_CXX_STANDARD 23) # Default C++ standard for targets
 
 # 指定源文件目录下的所有 .cpp 文件
-file(GLOB SOURCES "*.cpp")
+file(GLOB SOURCES "*.cc")
 
 find_package(fmt CONFIG REQUIRED)
 

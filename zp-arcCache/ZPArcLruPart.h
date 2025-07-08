@@ -87,8 +87,8 @@ private:
 
         ghostHead_ = std::make_shared<NodeType>();
         ghostTail_ = std::make_shared<NodeType>();
-        ghostHead_->nexx = ghostTail_;
-        ghostTail_->prev = ghostHead_;
+        ghostHead_->next_ = ghostTail_;
+        ghostTail_->prev_= ghostHead_;
     }
 
     bool updateExistingNode(NodePtr node, const Value& value)
@@ -111,7 +111,7 @@ private:
         return true;
     }
 
-    bool apdateNodeAccess(NodePtr node)
+    bool updateNodeAccess(NodePtr node)
     {
         moveToFront(node);
         node->incrementAccessCount();
@@ -160,7 +160,7 @@ private:
         mainCache_.erase(leastRecent->getKey());
     }
 
-    void removeFromMian(NodePtr node)
+    void removeFromMain(NodePtr node)
     {
         if(!node->prev_.expired() && node->next_)
         {
@@ -203,7 +203,7 @@ private:
         if(!oldestGhost || oldestGhost == ghostHead_)
             return;
 
-        removeFromMian(oldestGhost);
+        removeFromMain(oldestGhost);
         ghostCache_.erase(oldestGhost->getKey());
     }
 

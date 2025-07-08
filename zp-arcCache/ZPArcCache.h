@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "../ZPCachePolicy.h"
+#include "ZPArcLruPart.h"
+#include "ZPArcLfuPart.h"
 
 
 // Ensure ZPCachePolicy template is defined or included before use
@@ -40,7 +42,7 @@ public:
         }
     }
 
-    bool get(Key key, Value& vlaue)
+    bool get(Key key, Value& vlaue) override
     {
         checkGhostCaches(key);
 
@@ -53,6 +55,7 @@ public:
             }
             return lfuPart_->get(key, vlaue);
         }
+        return false;
     }
 
     Value get(Key key) override 
@@ -70,17 +73,19 @@ private:
         {
             if(lfuPart_->decreaseCapacity())
             {
-                lruPart_->increaseCapacity();
+                lruPart_->increasCapacity();
             }
             inGhost = true;
-        }else if(lfuPart_->checkGhost(key))
+        }
+        else if(lfuPart_->checkGhost(key))
         {
             if(lruPart_->decreaseCapacity())
             {
-                lfuPart_>increaseCapacity();
+                lfuPart_->increasCapacity();
             }
             return inGhost;
         }
+        return inGhost;
     }
 
 

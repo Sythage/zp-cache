@@ -4,6 +4,7 @@
 
 #include "ZPArcCacheNode.h"
 #include <cstddef>
+#include <iterator>
 #include <list>
 #include <memory>
 #include <mutex>
@@ -17,7 +18,7 @@ public:
     using NodeType = ArcNode<Key, Value>;
     using NodePtr = std::shared_ptr<NodeType>;
     using NodeMap = std::unordered_map<Key, NodePtr>;
-    using FreqMap = std::unordered_map<Key, NodePtr>;
+    using FreqMap = std::unordered_map<size_t, std::list<NodePtr>>;
 
     explicit ArcLfuPart(size_t capacity, size_t transformThreshold)
     : capacity_(capacity)
@@ -33,13 +34,13 @@ public:
         if(capacity_ == 0)
             return false;
 
-            std::lock_guard<std::mutex> lock(mutex_);
-            auto it = mainCache_.find(key);
-            if(it != mainCache_.end())
-            {
-                return updateExistingNode(it->second, value);
-            }
-            return addNewNode(key, value);
+        std::lock_guard<std::mutex> lock(mutex_);
+        auto it = mainCache_.find(key);
+        if(it != mainCache_.end())
+        {
+            return updateExistingNode(it->second, value);
+        }
+        return addNewNode(key, value);
     }
 
     bool get(Key key, Value& value)
@@ -95,7 +96,7 @@ private:
 
     bool updateExistingNode(NodePtr node, const Value& value)
     {
-        node->setvalue(value);
+        node->setValue(value);
         updateNodeFrequency(node);
         return true;
     }
@@ -159,7 +160,7 @@ private:
         }
 
         // remove the node of least use node
-        NodePtr leastNode = minFreqList.addToFront();
+        NodePtr leastNode = minFreqList.front();
         minFreqList.pop_front();
 
         // if the frequency of list is empty, detele the frequency project

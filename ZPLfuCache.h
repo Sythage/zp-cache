@@ -117,7 +117,7 @@ public:
         if(it != nodeMap_.end())
         {
             getInternal(it->second, value);
-            return value;
+            return true;
         }
         return false;
     }

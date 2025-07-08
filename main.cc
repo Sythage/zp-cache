@@ -13,10 +13,12 @@
 #include <random>
 #include <algorithm>
 
+#include <fmt/base.h>
+
 #include "ZPCachePolicy.h"
 #include "ZPLfuCache.h"
 #include "ZPLruCache.h"
-#include "ZPArcCache/ZPArcCache.h"
+#include "zp-arcCache/ZPArcCache.h"
 
 class Timer {
 public:
@@ -61,7 +63,7 @@ void printResults(const std::string& testName, int capacity,
 }
 
 void testHotDataAccess() {
-    std::cout << "\n=== 测试场景1：热点数据访问测试 ===" << std::endl;
+    fmt::print("\n=== 测试场景1：热点数据访问测试 ===");
     
     const int CAPACITY = 20;         // 缓存容量
     const int OPERATIONS = 500000;   // 总操作次数
